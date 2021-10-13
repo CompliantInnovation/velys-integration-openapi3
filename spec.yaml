@@ -1,0 +1,166 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: Dev Environment
+    url: https://carecoordination.velys.docvisor.dev
+info:
+  description: Velys Add Patient APIs
+  version: "1.0.0-alpha1"
+  title: Velys Token Exchange API
+  x-logo:
+    url: https://docspera.com/assets/D3/pic/Logo-Full-White-Padded.png
+    backgroundColor: "#0096FA"
+    href: https://docspera.com
+  contact:
+    email: luca@docspera.com
+  license:
+    name: Proprietary
+tags:
+  - name: authenticated
+    x-displayName: "Authenticated Velys Okta Session"
+    description: |
+      apis available to an authenticated Velys Okta session
+paths:
+  /api/v1/subscriptions/patients:
+    post:
+      security:
+        - BearerAuth: [ ]
+      tags:
+        - authenticated
+      summary: Add a patient subscription
+      description: Subscribe to a patient in DocSpera, to trigger data to be sent to DSEP via FHIR channels.
+      operationId: createSubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - docspera_patient_id
+              properties:
+                docspera_patient_id:
+                  type: integer
+                  description: docspera patient id, as returned from search, to subscribe to
+                  example: 212
+      responses:
+        '200':
+          description: success
+        '401':
+          description: unauthenticated
+        '403':
+          description: forbidden
+  /api/v1/patients:
+    post:
+      security:
+        - BearerAuth: [ ]
+      tags:
+        - authenticated
+      summary: Create a patient in DocSpera
+      description: Manually create a patient in DocSpera, usually for manual entry purposes when data is not accessible via EMR.
+      operationId: createSubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BasicPatientDTO'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicPatientDTO'
+        '401':
+          description: unauthenticated
+        '403':
+          description: forbidden
+components:
+  securitySchemes:
+    BearerAuth:
+      description: Okta JWT bearer token
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    BasicPatientDTO:
+      type: object
+      required:
+        - name
+        - mrn
+        - dob
+      properties:
+        name:
+          type: object
+          required:
+            - first
+            - last
+          properties:
+            first:
+              type: string
+              description: first name
+              example: Luca
+            last:
+              type: string
+              description: last name
+              example: Santarella
+        mrn:
+          type: string
+          description: patient MRN
+        dob:
+          type: integer
+          description: patient dob, in Ymd format
+          example: 19440625
+        birth_sex:
+          type: string
+          description: patinet birth sex, as defined in https://hl7.org/fhir/2018Sep/valueset-birth-sex.html
+          enum:
+            - "male"
+            - "female"
+            - "unknown"
+        phone:
+          type: object
+          properties:
+            mobile:
+              type: string
+              description: patient mobile phone
+            home:
+              type: string
+              description: patient home phone
+        provider:
+          type: integer
+          description: provider NPI
+          format: NPI
+          example: 1928562951
+        procedure:
+          type: object
+          properties:
+            name:
+              type: string
+              description: procedure name
+              example: L TKA
+            date:
+              type: integer
+              description: procedure date, in YmdHis format
+              format: YmdHis
+            location:
+              type: string
+              description: lcoation, TBD format
+        dsep_patient_id:
+          description: DSEP patient id
+          type: string
+        docspera_patient_id:
+          type: integer
+          description: docspera patient id
+          example: 212
+    ErrorResponse:
+      type: object
+      required:
+        - status
+        - errors
+      properties:
+        status:
+          type: integer
+          description: http status code
+        errors:
+          type: array
+          description: array of error messages
