@@ -6,7 +6,7 @@ servers:
 info:
   description: Velys Add Patient APIs
   version: "1.0.0-alpha1"
-  title: Velys Token Exchange API
+  title: Velys Add Patient APIs
   x-logo:
     url: https://docspera.com/assets/D3/pic/Logo-Full-White-Padded.png
     backgroundColor: "#0096FA"
