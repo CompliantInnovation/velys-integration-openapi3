@@ -257,6 +257,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+              example:
+                status: 400
+                errors:
+                  checklist:
+                    '1':
+                      status: This value is required.
         401:
           description: Unauthorized
         403:
