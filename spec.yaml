@@ -24,6 +24,10 @@ tags:
     x-displayName: "HCP Checklist Workflow"
     description: |
       HCP Checklist APIs described in the architecture diagram section 3.
+  - name: intakeform
+    x-displayName: "Intake Form Workflow"
+    description: |
+      Intake Form APIs described in the architecture diagram section 4.
 paths:
   /api/v1/subscriptions/patients:
     post:
@@ -269,6 +273,42 @@ paths:
           description: Forbidden
         404:
           description: Not Found
+  /api/v1/patients/{patientId}/intake:
+    put:
+      security:
+        - BearerAuth: [ ]
+      tags:
+        - intakeform
+      summary: Send VELYS Patient Intake
+      description: Send the VELYS Patient Intake to a patient.
+      operationId: sendIntake
+      parameters:
+        - in: path
+          name: patientId
+          schema:
+            type: integer
+          required: true
+          description: Patient ID the checklist belongs to
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                status: 400
+                errors:
+                  docspera_patient_id:
+                      status: This value is required.
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
 components:
   securitySchemes:
     BearerAuth:
@@ -283,6 +323,7 @@ components:
         - name
         - mrn
         - dob
+        - dsep_patient_id
       properties:
         name:
           type: object
