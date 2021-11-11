@@ -28,6 +28,10 @@ tags:
     x-displayName: "Intake Form Workflow"
     description: |
       Intake Form APIs described in the architecture diagram section 4.
+  - name: telehealth
+    x-displayName: "Telehealth Appointment Workflow"
+    description: |
+      Telehealth Appointment APIs described in the architecture diagram section 5.
 paths:
   /api/v1/subscriptions/patients:
     post:
@@ -309,6 +313,95 @@ paths:
           description: Forbidden
         404:
           description: Not Found
+  /api/v1/patients/{patientId}/appointments/{appointmentId}/telehealth:
+    post:
+      security:
+        - BearerAuth: [ ]
+      tags:
+        - telehealth
+      summary: Create Telehealth Invite for Appointment
+      description: Create Telehealth Invite for Appointment.
+      operationId: createTelehealthAppointment
+      parameters:
+        - in: path
+          name: patientId
+          schema:
+            type: integer
+          required: true
+          description: Patient ID of the appointment.
+        - in: path
+          name: appointmentId
+          schema:
+            type: integer
+          required: true
+          description: Appointment ID to make a telehealth case.
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                status: 400
+                errors:
+                  docspera_patient_id:
+                    status: This value is required.
+                  docspera_appointment_id:
+                    status: This value is required.
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+    get:
+      security:
+        - BearerAuth: [ ]
+      tags:
+        - telehealth
+      summary: Get Telehealth Join URL for Appointment
+      description: Get Telehealth Join URL for Appointment.
+      operationId: getTelehealthAppointmentJoinUrl
+      parameters:
+        - in: path
+          name: patientId
+          schema:
+            type: integer
+          required: true
+          description: Patient ID of the telehealth appointment.
+        - in: path
+          name: appointmentId
+          schema:
+            type: integer
+          required: true
+          description: Telehealth Appointment ID to join.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JoinTelehealthResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                status: 400
+                errors:
+                  docspera_appointment_id:
+                    status: Appointment is not a telehealth case.
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
 components:
   securitySchemes:
     BearerAuth:
@@ -317,6 +410,21 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    JoinTelehealthResponse:
+      type: object
+      required:
+        - signed_url
+        - expires
+      properties:
+        signed_url:
+          type: string
+          format: uri
+          description: Signed URL to join the telehealth appointment.
+          example: https://telehealth.d4.docspera.com/c/7eae2583-80d9-4029-bde4-fd309a4a27b9
+        expires:
+          type: integer
+          example: 3600
+          description: Time in seconds that the signed URL is valid for.
     BasicPatientDTO:
       type: object
       required:
