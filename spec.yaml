@@ -470,6 +470,11 @@ components:
             home:
               type: string
               description: patient home phone
+        email:
+          type: string
+          format: email
+          description: patient email
+          example: luca@docspera.com
         provider:
           type: integer
           description: provider NPI
@@ -483,9 +488,21 @@ components:
               description: procedure name
               example: L TKA
             date:
-              type: integer
-              description: procedure date, in YmdHis format
-              format: YmdHis
+              type: object
+              required:
+                - start_time
+                - end_time
+              properties:
+                start_time:
+                  type: integer
+                  description: procedure start datetime, in YmdHis format
+                  format: YmdHis
+                  example: 20211208090000
+                end_time:
+                  type: integer
+                  description: procedure start datetime, in YmdHis format
+                  format: YmdHis
+                  example: 20211208093000
             location:
               type: string
               description: lcoation, TBD format
