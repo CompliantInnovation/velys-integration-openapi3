@@ -243,22 +243,19 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ChecklistDTO"
-            example:
-              id: 7634
-              checklist:
-                - id: 200801
-                  status: 1
-                - id: 200802
-                  status: 0
-                - id: 200803
-                  status: 1
-                - id: 200804
-                  status: -1
-                - id: 20080
-                  status: 0
       responses:
         200:
           description: Success
+          headers:
+            X-Patient-Readiness:
+              schema:
+                type: number
+                description: Patient readiness percentage
+                example: 0.59
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistDTO"
         400:
           description: Bad Request
           content:
@@ -546,6 +543,19 @@ components:
                   - 0
                   - 1
                 description: Checked status of the checklist item; -1 for N/A, 0 for unchecked, 1 for checked.
+      example:
+        id: 7634
+        checklist:
+          - id: 200801
+            status: 1
+          - id: 200802
+            status: 0
+          - id: 200803
+            status: 1
+          - id: 200804
+            status: -1
+          - id: 20080
+            status: 0
     ErrorResponse:
       type: object
       required:
