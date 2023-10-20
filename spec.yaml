@@ -1,12 +1,18 @@
 openapi: 3.0.0
 # Added by API Auto Mocking Plugin
 servers:
-  - description: Dev Environment
-    url: https://velys.docvisor.dev
+  - description: DEV
+    url: https://api.velys.docvisor.dev/api/v1/
+  - description: SIT
+    url: https://api.velys.docharp.com/api/v1/
+  - description: QA
+    url: https://api.velys.docvisor.com/api/v1/
+  - description: PROD
+    url: https://api.carecoordination.velys.jnj/api/v1/
 info:
-  description: Velys Phase 2 APIs
-  version: "1.0.0-alpha2"
-  title: Velys Phase 2 APIs
+  description: Velys Insights APIs
+  version: "2.0.0"
+  title: Velys Insights APIs
   x-logo:
     url: https://docspera.com/assets/D3/pic/Logo-Full-White-Padded.png
     backgroundColor: "#0096FA"
@@ -33,7 +39,14 @@ tags:
     description: |
       Telehealth Appointment APIs described in the architecture diagram section 5.
 paths:
-  /api/v1/subscriptions/patients:
+  /org/{orgId}/subscriptions/patients:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: number
     post:
       security:
         - BearerAuth: [ ]
@@ -61,7 +74,14 @@ paths:
           description: unauthenticated
         '403':
           description: forbidden
-  /api/v1/patients:
+  /org/{orgId}/patients:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: number
     post:
       security:
         - BearerAuth: [ ]
@@ -86,7 +106,14 @@ paths:
           description: unauthenticated
         '403':
           description: forbidden
-  /api/events:
+  /org/{orgId}/events:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: number
     get:
       security:
         - BearerAuth: [ ]
@@ -222,7 +249,14 @@ paths:
           description: Unauthenticated
         '403':
           description: Forbidden
-  /api/v1/patients/{patientId}/checklist:
+  /org/{orgId}/patients/{patientId}/checklist:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: number
     put:
       security:
         - BearerAuth: [ ]
@@ -274,7 +308,13 @@ paths:
           description: Forbidden
         404:
           description: Not Found
-  /api/v1/intake:
+  /org/{orgId}/intake:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        schema:
+          type: number
     put:
       security:
         - BearerAuth: [ ]
@@ -316,7 +356,14 @@ paths:
           description: Forbidden
         404:
           description: Not Found
-  /api/v1/patients/{patientId}/appointments/{appointmentId}/telehealth:
+  /org/{orgId}/patients/{patientId}/appointments/{appointmentId}/telehealth:
+    parameters:
+      - name: orgId
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: number
     post:
       security:
         - BearerAuth: [ ]
