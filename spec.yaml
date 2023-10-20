@@ -277,7 +277,7 @@ paths:
           description: Forbidden
         404:
           description: Not Found
-  /api/v1/patients/{patientId}/intake:
+  /api/v1/intake:
     put:
       security:
         - BearerAuth: [ ]
@@ -286,13 +286,19 @@ paths:
       summary: Send VELYS Patient Intake
       description: Send the VELYS Patient Intake to a patient.
       operationId: sendIntake
-      parameters:
-        - in: path
-          name: patientId
-          schema:
-            type: integer
-          required: true
-          description: Patient ID the checklist belongs to
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - patientId
+              properties:
+                patientId:
+                  type: integer
+                  description: Patient ID the checklist belongs to
+                  example: 212
       responses:
         200:
           description: Success
