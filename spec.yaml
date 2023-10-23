@@ -308,7 +308,7 @@ paths:
           description: Forbidden
         404:
           description: Not Found
-  /org/{orgId}/intake:
+  /org/{orgId}/patients/{patientId}/intake:
     parameters:
       - name: orgId
         in: path
@@ -323,19 +323,13 @@ paths:
       summary: Send VELYS Patient Intake
       description: Send the VELYS Patient Intake to a patient.
       operationId: sendIntake
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - patientId
-              properties:
-                patientId:
-                  type: integer
-                  description: Patient ID the checklist belongs to
-                  example: 212
+      parameters:
+        - in: path
+          name: patientId
+          schema:
+            type: integer
+          required: true
+          description: Patient ID the checklist belongs to
       responses:
         200:
           description: Success
